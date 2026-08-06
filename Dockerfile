@@ -1,26 +1,17 @@
-FROM python:3.11-slim
+FROM debian:bookworm-slim
 
-# Install OCaml build deps
-RUN apt-get update && \
-    apt-get install -y make ocaml opam && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       ocaml-nox \
+       gcc \
+       libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
 COPY . .
+RUN set -e; \
+    for m in my prop sat_ifexpr marina; do ocamlc -c "$m.mli" "$m.ml"; done; \
+    ocamlc -c main.ml; \
+    ocamlc -custom -o marina str.cma my.cmo prop.cmo sat_ifexpr.cmo marina.cmo main.cmo
 
-RUN opam init -y --disable-sandboxing && \
-    opam install -y ocamlfind ounit2 && \
-    . /root/.opam/opam-init/init.sh > /dev/null 2>&1 && \
-    make
-
-RUN python3 -m venv /opt/venv && \
-    . /opt/venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install -r app/requirements.txt
-
-ENV PATH="/opt/venv/bin:$PATH"
-
-EXPOSE 8080
-
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "app.main:app"]
+CMD ["./marina"]
