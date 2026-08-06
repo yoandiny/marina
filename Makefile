@@ -44,4 +44,4 @@ test:
 depend: $(SOURCES)
 	$(CAMLDEP) *.mli *.ml > .depend
 
-include .depend
+-include .depend
