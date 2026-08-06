@@ -1,4 +1,10 @@
-FROM ocaml/opam:debian-ocaml-5.2
+FROM debian:bookworm-slim
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       ocaml \
+       make \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
