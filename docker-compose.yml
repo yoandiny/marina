@@ -1,0 +1,7 @@
+services:
+  marina:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: marina
+    restart: unless-stopped
