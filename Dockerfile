@@ -1,15 +1,7 @@
-FROM debian:bookworm-slim
+FROM ocaml/opam:debian-ocaml-5.2
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       ocaml \
-       make \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-
-COPY . .
-
-RUN make
+WORKDIR /home/opam/app
+COPY --chown=opam:opam . .
+RUN eval $(opam env) && make
 
 CMD ["./marina"]
