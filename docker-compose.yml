@@ -1,7 +1,5 @@
 services:
   marina:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/yoandiny/marina:latest
     container_name: marina
     restart: unless-stopped
